@@ -20,9 +20,7 @@ public void OnPluginStart()
 public void RoundStart(Event hEvent, const char[] sEvent, bool bdb)
 {
     for (int i = 1; i <= MaxClients; i++)
-    {
         if(IsClientInGame(i) && IsPlayerAlive(i)) CS_SetClientContributionScore(i, dmg[i]);
-    }
 }
 
 public void PlayerHurt(Event hEvent, const char[] sEvent, bool bdb)
@@ -33,4 +31,10 @@ public void PlayerHurt(Event hEvent, const char[] sEvent, bool bdb)
         dmg[attacker] += hEvent.GetInt("dmg_health") + hEvent.GetInt("dmg_armor");
         CS_SetClientContributionScore(attacker, dmg[attacker]);
     }
+}
+
+public void OnMapEnd()
+{
+    for(int i = 0; i <= MaxClients; i++)
+        dmg[i] = 0;
 }
