@@ -1,5 +1,8 @@
 #include <sourcemod>
 #include <cstrike>
+
+#define SaveScores // 0 everyhurt | 1 every round
+
 int dmg[MAXPLAYERS+1];
 
 public Plugin myinfo = 
@@ -29,7 +32,7 @@ public void PlayerHurt(Event hEvent, const char[] sEvent, bool bdb)
     if(attacker && !IsFakeClient(attacker))
     {
         dmg[attacker] += hEvent.GetInt("dmg_health") + hEvent.GetInt("dmg_armor");
-        CS_SetClientContributionScore(attacker, dmg[attacker]);
+        if(SaveScores == 0) CS_SetClientContributionScore(attacker, dmg[attacker]);
     }
 }
 
