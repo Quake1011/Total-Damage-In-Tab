@@ -1,9 +1,10 @@
 #include <sourcemod>
 #include <cstrike>
 
-#define SaveScores // 0 everyhurt | 1 every round
-
 int dmg[MAXPLAYERS+1];
+
+ConVar hCvar;
+bool bScoresMode;
 
 public Plugin myinfo = 
 {
@@ -18,12 +19,24 @@ public void OnPluginStart()
 {
     HookEvent("player_hurt", PlayerHurt, EventHookMode_Post);
     HookEvent("round_start", RoundStart, EventHookMode_Post);
+
+    HookConVarChange((hCvar = CreateConVar("sm_td_updater_mode", "0", "Update the damage display [0 - after player Hurt | 1 - after the round]")), OnConVarChanged);
+    bScoresMode = hCvar.BoolValue;
+
+    AutoExecConfig(true, "tabdmg");
+}
+
+public void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+    bScoresMode = convar.BoolValue;
 }
 
 public void RoundStart(Event hEvent, const char[] sEvent, bool bdb)
 {
     for (int i = 1; i <= MaxClients; i++)
+    {
         if(IsClientInGame(i) && IsPlayerAlive(i)) CS_SetClientContributionScore(i, dmg[i]);
+    }
 }
 
 public void PlayerHurt(Event hEvent, const char[] sEvent, bool bdb)
@@ -32,12 +45,6 @@ public void PlayerHurt(Event hEvent, const char[] sEvent, bool bdb)
     if(attacker && !IsFakeClient(attacker))
     {
         dmg[attacker] += hEvent.GetInt("dmg_health") + hEvent.GetInt("dmg_armor");
-        if(SaveScores == 0) CS_SetClientContributionScore(attacker, dmg[attacker]);
+        if(!bScoresMode) CS_SetClientContributionScore(attacker, dmg[attacker]);
     }
-}
-
-public void OnMapEnd()
-{
-    for(int i = 0; i <= MaxClients; i++)
-        dmg[i] = 0;
 }
