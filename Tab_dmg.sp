@@ -24,7 +24,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-    for(int i = 0; i <= MaxClients; i++)
+    for(int i = 1; i <= MaxClients; i++)
     {
         dmg[i] = 0;
     }
