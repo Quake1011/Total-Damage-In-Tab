@@ -1,4 +1,3 @@
-c
 #include <sourcemod>
 #include <cstrike>
 
@@ -10,7 +9,7 @@ public Plugin myinfo =
     name = "Total Damage In Tab",
     author = "Quake1011",
     description = "Total damage instead tab scores",
-    version = "1.1",
+    version = "1.2",
     url = "https://github.com/Quake1011/"
 }
 
